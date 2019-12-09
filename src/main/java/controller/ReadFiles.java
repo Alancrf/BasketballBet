@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import model.AwayPlayer;
 import model.HomePlayer;
-import org.*;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,6 +20,7 @@ public class ReadFiles {
 	ArrayList<String> listLineHome = new ArrayList();
 	ArrayList<String> listLineAway = new ArrayList();
 	ArrayList<String> listStatistics = new ArrayList();
+	String filePlanilha = "/home/alanoliveira/Área de Trabalho/analyse/basketball/planilha_base";
 
 	public void readPlayers(String homePlayer, String awayPlayer) throws IOException {
 		HomePlayer hp = new HomePlayer();
@@ -309,8 +309,9 @@ public class ReadFiles {
 			if (index == 8 || index == 9 || index == 13 || index == 18) {
 				continue;
 			}
-
+			
 			System.out.println(listLineHome.get(index));
+			savePlanilha(filePlanilha, 0 , 1 , listLineHome.get(index), hp.getNamePlayer());
 		}
 
 		System.out.println("");
@@ -326,11 +327,13 @@ public class ReadFiles {
 
 		}
 		
+		
+		
 		//Todo criar um for para salvar todos os dados na planilha (usando o método savePlanilha)
 
 	}
 
-	public void savePlanilha(String filePlanilha, int cellHome, int cellAway,String positionPlayer, ArrayList<Float> numbersHome, ArrayList<Float> numbersAway, String nameHome, String nameAway){
+	public void savePlanilha(String filePlanilha, int cellNumber, int positionPlayer, String numbersHome, String name){
 
 		//todo a celula vai ser diferente de acordo com a posição dos players
 		
@@ -348,20 +351,46 @@ public class ReadFiles {
 			listaTeste.add("teste6");
 			//criar o txt para cada posição (home e amway) verificar as posições do player antes de add na lista,  
 			
+			switch (positionPlayer) {
 			
-			for (int i = 0; i < sheetPlayers.getPhysicalNumberOfRows(); i++) {
+			case 1:
 				
-				for(int contLinha = 0; contLinha < listaTeste.size(); contLinha ++) {
+				for (int i = 0; i < sheetPlayers.getPhysicalNumberOfRows(); i++) {
 					
-					//linha
-					Row row = sheetPlayers.getRow(contLinha);
-					//coluna
-					Cell cell = row.getCell(5);
-					//Valor setado
-					cell.setCellValue(listaTeste.get(contLinha));
+					for(int contLinha = 4; contLinha < 4; contLinha ++) {
+						
+						//linha
+						Row row = sheetPlayers.getRow(contLinha);
+						//coluna
+						Cell cell = row.getCell(cellNumber);
+						//Valor setado
+						cell.setCellValue(numbersHome);
+					}
+					
 				}
 				
+				//Armadores
+				break;
+
+			case 2:
+				//Alas
+				break;
+				
+			case 3:
+				//Ala-Pivô
+				break;
+			case 4:
+				//Ala-Armador
+				break;
+			case 5:
+				//Pivô
+				break;
+			default:
+				//posição não existe
+				break;
 			}
+			
+			
 			file.close();
 
 			FileOutputStream outFile = new FileOutputStream(new File(filePlanilha));
