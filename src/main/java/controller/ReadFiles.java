@@ -20,7 +20,7 @@ public class ReadFiles {
 	ArrayList<String> listLineHome = new ArrayList();
 	ArrayList<String> listLineAway = new ArrayList();
 	ArrayList<String> listStatistics = new ArrayList();
-	String filePlanilha = "/home/alanoliveira/Área de Trabalho/analyse/basketball/planilha_base";
+	String filePlanilha = "C:\\Users\\alan_\\OneDrive\\Área de Trabalho\\basquete\\planilha_base_analise.xls";
 
 	public void readPlayers(String homePlayer, String awayPlayer) throws IOException {
 		HomePlayer hp = new HomePlayer();
@@ -28,6 +28,8 @@ public class ReadFiles {
 		int scoreHome = 0, scoreAway = 0;
 		int scoreHomeDefense = 0, scoreHomeOffensive = 0;
 		int scoreAwayDefense = 0, scoreAwayOffensive = 0;
+		ArrayList<String> listPlanilhaSave = new ArrayList();
+		String dadosHome = "";
 
 		// Lendo Os dois arquivos de textos com as estatisticas dos jogadores
 
@@ -308,10 +310,16 @@ public class ReadFiles {
 
 			if (index == 8 || index == 9 || index == 13 || index == 18) {
 				continue;
+			}else {
+				listPlanilhaSave.add(listLineHome.get(index));
+				savePlanilha(filePlanilha, 0 , 1 , listPlanilhaSave);      
 			}
 			
-			System.out.println(listLineHome.get(index));
-			savePlanilha(filePlanilha, 0 , 1 , listLineHome.get(index), hp.getNamePlayer());
+			//dadosHome = listLineHome.get(index);
+			//System.out.println(listLineHome.get(index));
+			
+			//System.out.println(dadosHome);
+		
 		}
 
 		System.out.println("");
@@ -333,7 +341,7 @@ public class ReadFiles {
 
 	}
 
-	public void savePlanilha(String filePlanilha, int cellNumber, int positionPlayer, String numbersHome, String name){
+	public void savePlanilha(String filePlanilha, int cellNumber, int positionPlayer, ArrayList<String> dadosHome){
 
 		//todo a celula vai ser diferente de acordo com a posição dos players
 		
@@ -355,19 +363,26 @@ public class ReadFiles {
 			
 			case 1:
 				
-				for (int i = 0; i < sheetPlayers.getPhysicalNumberOfRows(); i++) {
+				//for (int i = 0; i < sheetPlayers.getPhysicalNumberOfRows(); i++) {
 					
-					for(int contLinha = 4; contLinha < 4; contLinha ++) {
+					for(int contLinha = 3; contLinha < dadosHome.size(); contLinha ++) {
 						
 						//linha
 						Row row = sheetPlayers.getRow(contLinha);
 						//coluna
 						Cell cell = row.getCell(cellNumber);
 						//Valor setado
-						cell.setCellValue(numbersHome);
+						cell.setCellValue(dadosHome.get(contLinha));
+						
+						file.close();
+
+						FileOutputStream outFile = new FileOutputStream(new File(filePlanilha));
+						workbook.write(outFile);
+						outFile.close();
+						System.out.println("Arquivo Excel editado com sucesso!");
 					}
 					
-				}
+				//}
 				
 				//Armadores
 				break;
@@ -391,13 +406,6 @@ public class ReadFiles {
 			}
 			
 			
-			file.close();
-
-			FileOutputStream outFile = new FileOutputStream(new File(filePlanilha));
-			workbook.write(outFile);
-			outFile.close();
-			System.out.println("Arquivo Excel editado com sucesso!");
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Arquivo Excel não encontrado!");
